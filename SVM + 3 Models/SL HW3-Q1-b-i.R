@@ -159,35 +159,32 @@ mashAccuracy <- AccuracyGraph + labs(title = "Accuracy from 4 Models", x = "Mode
 
 # Precision 
 PrecisionG_LDA <- ggplot(sum_P, aes(sum_P$`Class Name`, sum_P$LDA_P), color=sum_P$LDA_P) + geom_bar(stat="identity", aes(fill = sum_P$LDA_P)) + geom_text(aes(label = sum_P$`Class Name`), hjust = 1.05, srt=90, size = 3, color = "white", fontface= "bold") + theme(axis.text.x=element_blank())
-mashPrecisionG_LDA <- PrecisionG_LDA + labs(title = "Precision - LDA", x = "LDA", y = "Precision", fill="Precision") + scale_fill_gradient(low="seagreen4",high="darkorange") + scale_y_continuous(limits=c(0.0, 1.0))
+mashPrecisionG_LDA <- PrecisionG_LDA + labs(title = "Precision - LDA", x = "LDA", y = "Precision", fill="Precision") + scale_fill_gradient(low="seagreen4",high="darkorange") + ylim(0.0, 0.9)
  
 PrecisionG_QDA <- ggplot(sum_P, aes(sum_P$`Class Name`, sum_P$QDA_P), color=sum_P$QDA_P) + geom_bar(stat="identity", aes(fill = sum_P$QDA_P)) + geom_text(aes(label = sum_P$`Class Name`), hjust = 1.05, srt=90, size = 3, color = "white", fontface= "bold") + theme(axis.text.x=element_blank())
-mashPrecisionG_QDA <- PrecisionG_QDA + labs(title = "Precision - QDA", x = "QDA", y = "Precision", fill="Precision") + scale_fill_gradient(low="seagreen4",high="darkorange") + scale_y_continuous(limits=c(0.0, 1.0))
+mashPrecisionG_QDA <- PrecisionG_QDA + labs(title = "Precision - QDA", x = "QDA", y = "Precision", fill="Precision") + scale_fill_gradient(low="seagreen4",high="darkorange") + ylim(0.0, 0.9)
 
 PrecisionG_KNN <- ggplot(sum_P, aes(sum_P$`Class Name`, sum_P$KNN_P), color=sum_P$KNN_P) + geom_bar(stat="identity", aes(fill = sum_P$KNN_P)) + geom_text(aes(label = sum_P$`Class Name`), hjust = 1.05, srt=90, size = 3, color = "white", fontface= "bold") + theme(axis.text.x=element_blank())
-mashPrecisionG_KNN <- PrecisionG_KNN + labs(title = "Precision - KNN", x = "KNN", y = "Precision", fill="Precision") + scale_fill_gradient(low="seagreen4",high="darkorange") + scale_y_continuous(limits=c(0.0, 1.0))
+mashPrecisionG_KNN <- PrecisionG_KNN + labs(title = "Precision - KNN", x = "KNN", y = "Precision", fill="Precision") + scale_fill_gradient(low="seagreen4",high="darkorange") + ylim(0.0, 0.9)
 
 PrecisionG_SVM <- ggplot(sum_P, aes(sum_P$`Class Name`, sum_P$SVM_P), color=sum_P$SVM_P) + geom_bar(stat="identity", aes(fill = sum_P$SVM_P)) + geom_text(aes(label = sum_P$`Class Name`), hjust = 1.05, srt=90, size = 3, color = "white", fontface= "bold") + theme(axis.text.x=element_blank())
-mashPrecisionG_SVM <- PrecisionG_SVM + labs(title = "Precision - SVM", x = "SVM", y = "Precision", fill="Precision") + scale_fill_gradient(low="seagreen4",high="darkorange") + scale_y_continuous(limits=c(0.0, 1.0))
+mashPrecisionG_SVM <- PrecisionG_SVM + labs(title = "Precision - SVM", x = "SVM", y = "Precision", fill="Precision") + scale_fill_gradient(low="seagreen4",high="darkorange") + ylim(0.0, 0.9)
 
-Precidion_Grid <- grid.arrange(mashPrecisionG_LDA, mashPrecisionG_QDA, mashPrecisionG_KNN, mashPrecisionG_SVM, ncol = 4)
+Precision_Grid <- grid.arrange(mashPrecisionG_LDA, mashPrecisionG_QDA, mashPrecisionG_KNN, mashPrecisionG_SVM, ncol = 4)
 
 
 # Recall
 RecallG_LDA <- ggplot(sum_R, aes(sum_P$`Class Name`, sum_R$LDA_R), color=sum_R$LDA_R) + geom_bar(stat="identity", aes(fill = sum_R$LDA_R)) + geom_text(aes(label = sum_R$`Class Name`), hjust = 1.05, srt=90, size = 3, color = "white", fontface= "bold") + theme(axis.text.x=element_blank())
-mashRecallG_LDA <- RecallG_LDA + labs(title = "Recall - LDA", x = "LDA", y = "Recall", fill="Recall") + scale_fill_gradient(low="skyblue2",high="tomato") + scale_y_continuous(limits=c(0.0, 0.9))
+mashRecallG_LDA <- RecallG_LDA + labs(title = "Recall - LDA", x = "LDA", y = "Recall", fill="Recall") + scale_fill_gradient(low="skyblue2",high="tomato") + ylim(0.0, 0.9)
 
 RecallG_QDA <- ggplot(sum_R, aes(sum_P$`Class Name`, sum_R$QDA_R), color=sum_R$QDA_R) + geom_bar(stat="identity", aes(fill = sum_R$QDA_R)) + geom_text(aes(label = sum_R$`Class Name`), hjust = 1.05, srt=90, size = 3, color = "white", fontface= "bold") + theme(axis.text.x=element_blank())
-mashRecallG_QDA <- RecallG_QDA + labs(title = "Recall - QDA", x = "QDA", y = "Recall", fill="Recall") + scale_fill_gradient(low="skyblue2",high="tomato") + scale_y_continuous(limits=c(0.0, 0.9))
+mashRecallG_QDA <- RecallG_QDA + labs(title = "Recall - QDA", x = "QDA", y = "Recall", fill="Recall") + scale_fill_gradient(low="skyblue2",high="tomato") + ylim(0.0, 0.9)
 
 RecallG_KNN <- ggplot(sum_R, aes(sum_P$`Class Name`, sum_R$KNN_R), color=sum_R$KNN_R) + geom_bar(stat="identity", aes(fill = sum_R$KNN_R)) + geom_text(aes(label = sum_R$`Class Name`), hjust = 1.05, srt=90, size = 3, color = "white", fontface= "bold") + theme(axis.text.x=element_blank())
-mashRecallG_KNN <- RecallG_KNN + labs(title = "Recall - KNN", x = "KNN", y = "Recall", fill="Recall") + scale_fill_gradient(low="skyblue2",high="tomato") + scale_y_continuous(limits=c(0.0, 0.9))
+mashRecallG_KNN <- RecallG_KNN + labs(title = "Recall - KNN", x = "KNN", y = "Recall", fill="Recall") + scale_fill_gradient(low="skyblue2",high="tomato") + ylim(0.0, 0.9)
 
 
 RecallG_SVM <- ggplot(sum_R, aes(sum_P$`Class Name`, sum_R$SVM_R), color=sum_R$SVM_R) + geom_bar(stat="identity", aes(fill = sum_R$SVM_R)) + geom_text(aes(label = sum_R$`Class Name`), hjust = 1.05, srt=90, size = 3, color = "white", fontface= "bold") + theme(axis.text.x=element_blank())
-mashRecallG_SVM <- RecallG_SVM + labs(title = "Recall - SVM", x = "SVM", y = "Recall", fill="Recall") + scale_fill_gradient(low="skyblue2",high="tomato") + scale_y_continuous(limits=c(0.0, 0.9))
+mashRecallG_SVM <- RecallG_SVM + labs(title = "Recall - SVM", x = "SVM", y = "Recall", fill="Recall") + scale_fill_gradient(low="skyblue2",high="tomato") + ylim(0.0, 0.9)
 
 Recall_Grid <- grid.arrange(mashRecallG_LDA, mashRecallG_QDA, mashRecallG_KNN , mashRecallG_SVM, ncol = 4)
-
-# Put 3 graphs in one
-grid.arrange(mashAccuracy, Precidion_Grid, Recall_Grid, nrow = 3)
