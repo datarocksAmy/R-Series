@@ -7,7 +7,6 @@ library(ggthemes)   # Graph Theme
 library(ggplot2)    # Plot graph
 library(zoo)        # Time into year/month
 library(stats)
-library(outliers)
 
 
 # Read in dataset kc_weather
@@ -45,21 +44,19 @@ graphset<-merge(graphset,  values,  all=TRUE,  by='time')
 graphset[is.na(graphset$dev),  ]$dev<-0
 graphset$Fitted<-c(rep(NA,  NROW(graphset)-(NROW(values) + NROW(fitted_values))),  fitted_values$value_fitted,  values$value_forecast)
 graphset[is.na(graphset)] <- 0
+sub_graphset <- subset(graphset, (graphset$Actual > 0 | graphset$value_fitted > 0 | graphset$Fitted > 0))
 
 # Melt time, acutal and fitted value
-graphset.melt<-melt(graphset[, c('time', 'Actual', 'Fitted')], id='time')
+graphset.melt<-melt(sub_graphset[, c('time', 'Actual', 'Fitted')], id='time')
 
 # Error area color
 error.ribbon='gold'
 line.size = 1
 
 # Plot the line graph for fitted value v.s. actual value
-ggplot(graphset.melt,  aes(x=time, y=value)) + geom_ribbon(data=graphset, aes(x=time, y=Fitted, ymin=Fitted-dev,  ymax=Fitted + dev),  alpha=.2,  fill=error.ribbon) +
-  geom_line(aes(colour=variable), size=line.size) +  xlab('Time') + ylab('Milk Production lbs/cow') + scale_colour_brewer("Legend", palette = "Set1") +
-  ggtitle("Holt Winters Actual v.s. Fitted") +  theme(plot.title = element_text(hjust = 0.5)) +
-  scale_color_ptol() +  theme_minimal()
-
-ggplot(graphset.melt,  aes(time, value, color=variable)) + geom_point()
+ggplot(graphset.melt, aes(x=time, y=value)) + geom_ribbon(data=sub_graphset, aes(x=time, y=Fitted, ymin=Fitted-dev,ymax=Fitted + dev), alpha=.2, fill=error.ribbon) +
+geom_line(aes(colour=variable), size=line.size) +  xlab('Time') + ylab('Milk Production lbs/cow') + scale_colour_brewer("Legend", palette = "Set1") +
+ggtitle("Holt Winters Actual v.s. Fitted") +  theme(plot.title = element_text(hjust = 0.5)) + ylim(500, 1000) + scale_x_date(date_labels="%Y",date_breaks ="1 year")
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Calculate Mean Absolute Diviation (MAD) & Mean Forecast Error (MFE)
@@ -110,7 +107,7 @@ ggplot(actual_melt, aes(x=actual_values.time, y = value, color = actual_values.t
 # fitted MAD v.s Actual MAD Bar Graph
 ggplot(data=holtWinters_MAD, aes(x=time, y=value, fill=variable)) +  geom_bar(stat="identity", width=20, position=position_dodge(40)) +
 scale_x_date(date_labels="%Y",date_breaks="1 year") + ggtitle("Holt Winters Actual v.s. Fitted - MAD") + 
-  labs(x="Time(year)",y="Milk Production lbs/cow") + scale_fill_discrete(name="MAD", labels=c("Fitted","Actual"))
+  labs(x="Time(year)",y="Error/Bias") + scale_fill_discrete(name="MAD", labels=c("Fitted","Actual"))
 
 # MAD Difference 
 MAD_dif <- data.frame(combine_MAD$time, (combine_MAD$actual_MAD-combine_MAD$fitted_MAD))
@@ -143,11 +140,11 @@ combine_MFE <- merge(F_fitted_MFE_DF, F_actual_MFE_DF)
 holtWinters_MFE <- melt(combine_MFE, id="time")
 
 # fitted MFE v.s Actual MFE Bar Graph
-ggplot(data=holtWinters_MFE, aes(x=time, y=value, fill=variable)) +  geom_bar(stat="identity", width=20, position=position_dodge(40)) +
-  scale_x_date(date_labels="%Y",date_breaks="1 year") + ggtitle("Holt Winters Actual v.s. Fitted - MFE") + 
-  labs(x="Time(year)",y="Milk Production lbs/cow") + scale_fill_discrete(name="MFE", labels=c("Fitted","Actual")) + 
-  scale_fill_manual(values = c("tomato", "skyblue2"))
+ggplot(data=holtWinters_MFE, aes(x=time, y=value, fill=variable)) + geom_bar(stat="identity", width=20, position=position_dodge(40)) +
+  scale_x_date(date_labels="%Y",date_breaks="1 year") + ggtitle("Holt Winters Actual v.s. Fitted - MFE") + guides(fill = guide_legend(title = "MFE")) +
+  labs(x="Time(year)",y="Error/Bias") +scale_fill_manual(labels = c("Fitted", "Actual"), values = c("tomato", "skyblue2"))
 
+# ----------------------------------------------- MAD v.s. MFE -----------------------------------------------
 # MFE Difference 
 MFE_dif <- data.frame(combine_MFE$time, (combine_MFE$actual_MFE-combine_MFE$fitted_MFE))
 colnames(MFE_dif)[1] <- "time"
@@ -161,6 +158,6 @@ MAD_MFE_dif_melt <- melt(MAD_MFE_dif_DF, id = "time")
 
 # Plot Line Chart
 ggplot(MAD_MFE_dif_melt, aes(x=time, y = value, group=variable, color = factor(variable, labels = c("MFE", "MAD")))) +
-  geom_line(size=1) + ggtitle("MAD & MFE Forecast Bias") + labs(x="Time",y="Milk Production lbs/cow", color="Forecast Error Method") +
+  geom_line(size=1) + ggtitle("MAD & MFE Forecast Bias") + labs(x="Time(year)",y="Error/Bias", color="Forecast Error Method") +
   scale_color_fivethirtyeight() + theme_fivethirtyeight() + scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
-  theme(plot.title = element_text(hjust = 0.5)) + ylim(0.45, -0.45)
+  theme(plot.title = element_text(hjust = 0.5)) + ylim(0.45, -0.45) 
